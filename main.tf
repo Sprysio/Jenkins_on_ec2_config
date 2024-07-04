@@ -164,15 +164,18 @@ resource "aws_instance" "jenkins_ec2" {
   subnet_id            = aws_subnet.jenkins_subnet.id
   key_name             = var.key_name
   iam_instance_profile = aws_iam_instance_profile.s3-jenkins-profile.name
+  
+  root_block_device {
+    volume_size = 20  
+    volume_type = "gp3"
+  }
+  
   tags = {
     Name = "JenkinsEC2Instance"
   }
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
 
-  root_block_device {
-    volume_size = 20  
-    volume_type = "gp3"
-  }
+  
 
     provisioner "file" {
     source      = "setup_jenkins.yml"
