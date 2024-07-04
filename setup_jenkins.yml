@@ -1,0 +1,36 @@
+- name: Setup Jenkins
+  hosts: all
+  become: true
+  remote_user: ec2-user
+  tasks:
+    - name: Update all packages
+      ansible.builtin.yum:
+        name: '*'
+        state: present
+        update_only: true
+
+    - name: Install Java
+      ansible.builtin.dnf:
+        name: java-17-amazon-corretto-devel
+        state: present
+
+    - name: Download Jenkins repository file
+      ansible.builtin.get_url:
+        url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+        mode: "0600"
+
+    - name: Import Jenkins-CI key
+      ansible.builtin.rpm_key:
+        key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+    - name: Install Jenkins
+      ansible.builtin.yum:
+        name: jenkins
+        state: present
+
+    - name: Start and enable Jenkins service
+      ansible.builtin.service:
+        name: jenkins
+        enabled: true
+        state: started
