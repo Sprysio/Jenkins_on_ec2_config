@@ -157,16 +157,6 @@ resource "aws_iam_instance_profile" "s3-jenkins-profile" {
   role = aws_iam_role.my-s3-jenkins-role.name
 }
 
-# Create EBS Volume
-resource "aws_ebs_volume" "jenkins_volume" {
-  availability_zone = "eu-north-1a"
-  size              = 15  
-
-  tags = {
-    Name = "JenkinsRootVolume"
-  }
-}
-
 #Create EC2
 resource "aws_instance" "jenkins_ec2" {
   ami                  = var.ami_id                
@@ -179,9 +169,9 @@ resource "aws_instance" "jenkins_ec2" {
   }
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
 
-  ebs_block_device {
-    device_name = "/dev/sda1"
-    volume_id   = aws_ebs_volume.jenkins_volume.id
+  root_block_device {
+    volume_size = 20  
+    volume_type = "gp3"
   }
 
     provisioner "file" {
