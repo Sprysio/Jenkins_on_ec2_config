@@ -175,7 +175,10 @@ resource "aws_instance" "jenkins_ec2" {
   }
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
 
-  
+  # Disable unlimited credits
+  credit_specification {
+    cpu_credits = "standard"
+  }
 
     provisioner "file" {
     source      = "setup_jenkins.yml"
