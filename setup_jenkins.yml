@@ -4,10 +4,9 @@
   remote_user: ec2-user
   tasks:
     - name: Update all packages
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: '*'
         state: present
-        update_only: true
 
     - name: Install Java
       ansible.builtin.dnf:
@@ -25,7 +24,7 @@
         key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
 
     - name: Install Jenkins
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: jenkins
         state: present
 
